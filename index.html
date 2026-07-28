@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Операция Антижопич 2026</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Таблер иконки -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+</head>
+<body>
+
+  <!-- ===== НАВИГАЦИЯ ===== -->
+  <nav class="nav" id="nav">
+    <button class="nav-btn active" data-tab="overview">
+      <i class="ti ti-dashboard"></i>
+      <span>Обзор</span>
+    </button>
+    <button class="nav-btn" data-tab="training">
+      <i class="ti ti-barbell"></i>
+      <span>Тренировки</span>
+    </button>
+    <button class="nav-btn" data-tab="nutrition">
+      <i class="ti ti-salad"></i>
+      <span>Питание</span>
+    </button>
+    <button class="nav-btn" data-tab="tracker">
+      <i class="ti ti-chart-line"></i>
+      <span>Прогресс</span>
+    </button>
+  </nav>
+
+  <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+  <main class="main" id="main">
+
+    <!-- ── ТАБ: ОБЗОР ── -->
+    <section id="tab-overview" class="tab-section active">
+
+      <header class="hero">
+        <div class="hero-eyebrow">Операция Антижопич 2026</div>
+        <h1 class="hero-title">Операция<br>Антижопич&nbsp;2026</h1>
+        <p class="hero-sub" id="hero-sub">Full Body 5×/нед · Пн–Пт + Сб–Вс отдых</p>
+      </header>
+
+      <!-- Ключевые метрики (полностью пересчитываются в JS от START_WEIGHT/GOAL_WEIGHT/текущего веса) -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Цель</div>
+          <div class="metric-value" id="m-goal">−15 <span class="metric-unit">кг</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Калории/день</div>
+          <div class="metric-value" id="m-kcal">2250 <span class="metric-unit">ккал</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Дефицит</div>
+          <div class="metric-value" id="m-deficit">~780 <span class="metric-unit">ккал/д</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Темп потери</div>
+          <div class="metric-value" id="m-pace">~0.75 <span class="metric-unit">кг/нед</span></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Срок до цели</div>
+          <div class="metric-value" id="m-eta">~20 <span class="metric-unit">нед</span></div>
+        </div>
+      </div>
+
+      <!-- Прогресс-бар операции — по весу -->
+      <div class="op-progress-card" id="op-progress-card">
+        <div class="op-progress-header">
+          <span class="op-label"><i class="ti ti-scale"></i> Прогресс по весу</span>
+          <span class="op-pct" id="op-pct">0%</span>
+        </div>
+        <div class="op-bar-track">
+          <div class="op-bar-fill" id="op-bar" style="width:0%"></div>
+        </div>
+        <div class="op-progress-footer">
+          <span id="op-lost">Сброшено: — кг</span>
+          <span id="op-left">Осталось: 15 кг</span>
+        </div>
+      </div>
+
+      <!-- Прогресс-бар операции — по сожжённым калориям (дефициту) -->
+      <div class="op-progress-card" id="op-progress-card-kcal">
+        <div class="op-progress-header">
+          <span class="op-label"><i class="ti ti-flame"></i> Прогресс по дефициту ккал</span>
+          <span class="op-pct" id="op-kcal-pct">0%</span>
+        </div>
+        <div class="op-bar-track">
+          <div class="op-bar-fill op-bar-fill--kcal" id="op-kcal-bar" style="width:0%"></div>
+        </div>
+        <div class="op-progress-footer">
+          <span id="op-kcal-done">Накоплено: 0 ккал</span>
+          <span id="op-kcal-left">Цель: 0 ккал</span>
+        </div>
+        <div class="op-progress-note">Дефицит калорий — более стабильный показатель, чем вес: вес скачет из-за воды и еды в ЖКТ, а энергетический баланс отражает реальный прогресс жиросжигания.</div>
+      </div>
+
+      <!-- TDEE -->
+      <h2 class="section-title">Расчёт TDEE</h2>
+      <div class="info-table" id="tdee-table">
+        <div class="info-row"><span class="info-key">Текущий вес</span><span class="info-val" id="t-weight">95 кг</span></div>
+        <div class="info-row"><span class="info-key">BMR (Mifflin, от текущего веса)</span><span class="info-val" id="t-bmr">1971 ккал</span></div>
+        <div class="info-row"><span class="info-key">15 000 шагов/день</span><span class="info-val" id="t-steps">+850 ккал</span></div>
+        <div class="info-row"><span class="info-key">Силовая (честный расчёт)</span><span class="info-val">+250–300 ккал</span></div>
+        <div class="info-row"><span class="info-key">TDEE тренировочный день</span><span class="info-val" id="t-tdee-train">≈3050 ккал</span></div>
+        <div class="info-row"><span class="info-key">TDEE день отдыха</span><span class="info-val" id="t-tdee-rest">≈2820 ккал</span></div>
+        <div class="info-row highlight"><span class="info-key">Средний TDEE (6 тр./нед)</span><span class="info-val accent" id="t-tdee-avg">≈3010 ккал</span></div>
+        <div class="info-row highlight"><span class="info-key">Целевой калораж</span><span class="info-val accent" id="t-target-kcal">2200–2250 ккал</span></div>
+        <div class="info-row highlight"><span class="info-key">Фактический дефицит</span><span class="info-val accent" id="t-actual-deficit">≈750–800 ккал/д</span></div>
+      </div>
+      <p class="table-note"><i class="ti ti-refresh"></i> Пересчитывается автоматически от последнего веса в разделе «Прогресс». Без записей — расчёт от стартового веса 95 кг.</p>
+
+      <div class="callout callout--warn">
+        <i class="ti ti-alert-triangle"></i>
+        <span class="callout-text" id="deficit-warning-text">Дефицит ~780 ккал — верхняя граница безопасного. Белок 190 г и прогрессивная перегрузка обязательны. При упадке сил — поднять калораж на 100–150 ккал.</span>
+      </div>
+
+      <!-- Срок операции -->
+      <h2 class="section-title">Срок операции</h2>
+      <div class="info-table" id="eta-table">
+        <div class="info-row"><span class="info-key">Цель сбросить</span><span class="info-val" id="e-goal">15 кг жира</span></div>
+        <div class="info-row"><span class="info-key">Недельный дефицит</span><span class="info-val" id="e-weekly-deficit">≈5460 ккал</span></div>
+        <div class="info-row"><span class="info-key">Потеря в неделю</span><span class="info-val" id="e-weekly-loss">≈0.72 кг</span></div>
+        <div class="info-row highlight"><span class="info-key">Расчётный срок</span><span class="info-val accent" id="e-eta">20–21 неделя</span></div>
+        <div class="info-row"><span class="info-key">С учётом плато (+15%)</span><span class="info-val" id="e-eta-plateau">23–24 недели</span></div>
+      </div>
+
+      <!-- Макросы -->
+      <h2 class="section-title">Макросы при 2250 ккал</h2>
+      <div class="macro-bars">
+        <div class="macro-row">
+          <div class="macro-label"><span>Белок · 190 г</span><span class="macro-kcal">760 ккал · 34%</span></div>
+          <div class="macro-track"><div class="macro-fill macro-fill--protein" style="width:34%"></div></div>
+        </div>
+        <div class="macro-row">
+          <div class="macro-label"><span>Углеводы · 235 г</span><span class="macro-kcal">940 ккал · 42%</span></div>
+          <div class="macro-track"><div class="macro-fill macro-fill--carbs" style="width:42%"></div></div>
+        </div>
+        <div class="macro-row">
+          <div class="macro-label"><span>Жиры · 60 г</span><span class="macro-kcal">540 ккал · 24%</span></div>
+          <div class="macro-track"><div class="macro-fill macro-fill--fat" style="width:24%"></div></div>
+        </div>
+        <div class="macro-note">Жиры 60 г = 0.63 г/кг — минимально допустимый уровень для гормонального фона. Итого: 760+940+540 = 2240 ≈ 2250 ккал</div>
+      </div>
+
+      <!-- Объём на группу -->
+      <h2 class="section-title">Объём на группу мышц в неделю</h2>
+      <div class="volume-table-wrap">
+        <table class="volume-table">
+          <thead>
+            <tr><th>Мышца</th><th>Подходов/нед</th><th>Дни</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Quads / Glutes</td><td>10–14</td><td>Пн + Ср + Пт</td></tr>
+            <tr><td>Hamstrings / Glutes</td><td>6–8</td><td>Вт + Чт</td></tr>
+            <tr><td>Chest (HP)</td><td>9–13</td><td>Пн + Вт + Чт + Пт</td></tr>
+            <tr><td>Back (HR + VR)</td><td>13–17</td><td>Пн + Вт + Ср + Чт + Пт</td></tr>
+            <tr><td>Side Delts (LAT)</td><td>7–9</td><td>Пн + Ср + Чт</td></tr>
+            <tr><td>Rear Delts (RD)</td><td>7–9</td><td>Вт + Ср + Пт</td></tr>
+            <tr><td>Shoulders (VP)</td><td>4–6</td><td>Чт + Пт</td></tr>
+            <tr><td>Biceps (BI)</td><td>6–8</td><td>Пн + Вт + Ср + Пт</td></tr>
+            <tr><td>Triceps (TR)</td><td>5–7</td><td>Пн + Ср + Чт</td></tr>
+            <tr><td>Calves (CALF)</td><td>6–9</td><td>Вт + Ср + Пт</td></tr>
+            <tr><td>Core</td><td>6–8</td><td>Пн + Вт + Чт</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ── ТАБ: ТРЕНИРОВКИ ── -->
+    <section id="tab-training" class="tab-section">
+
+      <header class="page-header">
+        <h1 class="page-title">Full Body 5×/week</h1>
+        <p class="page-sub">Пн Squat · Вт H.Push · Ср Recovery · Чт H.Hinge · Пт V.Pull · Сб–Вс отдых</p>
+      </header>
+
+      <div class="callout callout--info">
+        <i class="ti ti-switch-2"></i>
+        <span class="callout-text">Нажмите день для раскрытия. Кнопка <strong>Swap</strong> на каждом упражнении открывает банк замен — все 5 упражнений того же паттерна и стимула. Выбор сохраняется в браузере.</span>
+      </div>
+
+      <div id="days-accordion" class="accordion"></div>
+
+    </section>
+
+    <!-- ── ТАБ: ПИТАНИЕ ── -->
+    <section id="tab-nutrition" class="tab-section">
+
+      <header class="page-header">
+        <h1 class="page-title">Питание</h1>
+        <p class="page-sub">2250 ккал · Б 190 г · У 235 г · Ж 60 г · Рацион для лёгкого усвоения</p>
+      </header>
+
+      <div class="callout callout--info">
+        <i class="ti ti-leaf"></i>
+        <span class="callout-text">Рацион подобран таким образом, чтобы снизить нагрузку на ЖКТ и улучшить усвояемость пищи. Приоритет — варка, тушение, греческий йогурт как источник пробиотиков.</span>
+      </div>
+
+      <div id="meals-list" class="meals-list"></div>
+
+      <h2 class="section-title">Принципы питания для лёгкого усвоения</h2>
+      <div class="info-table">
+        <div class="info-row"><span class="info-key"><i class="ti ti-check text-green"></i> Готовить на пару, варить, тушить</span><span class="info-val">не жарить</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-check text-green"></i> Овощи термически обработаны</span><span class="info-val">не сырые</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-check text-green"></i> Пробиотики каждый день</span><span class="info-val">греч. йогурт, кефир</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-check text-green"></i> Есть медленно, жевать тщательно</span><span class="info-val">улучшает усвоение</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-check text-green"></i> Рефид 1 раз в неделю</span><span class="info-val">+300 ккал за счёт углей</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-x text-red"></i> Воду — не во время еды</span><span class="info-val">за 20 мин до / 30 после</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-x text-red"></i> Минимум бобовых, капусты</span><span class="info-val">тяжелее усваиваются</span></div>
+        <div class="info-row"><span class="info-key"><i class="ti ti-x text-red"></i> Минимум цельного молока</span><span class="info-val">заменить греч. йогуртом</span></div>
+      </div>
+
+      <h2 class="section-title">Лучшие продукты по категориям</h2>
+      <div id="food-sources-list" class="food-sources-grid"></div>
+
+      <h2 class="section-title">Спортивное питание</h2>
+      <div class="info-table">
+        <div class="info-row"><span class="info-key">Креатин моногидрат</span><span class="info-val">5 г/день, постоянно</span></div>
+        <div class="info-row"><span class="info-key">Сывороточный протеин</span><span class="info-val">при нехватке белка из еды</span></div>
+        <div class="info-row"><span class="info-key">Омега-3 (рыбий жир)</span><span class="info-val">2–3 г EPA+DHA/день</span></div>
+        <div class="info-row"><span class="info-key">Витамин D3 + K2</span><span class="info-val">2000–4000 МЕ/день</span></div>
+        <div class="info-row"><span class="info-key">Магний глицинат</span><span class="info-val">300 мг перед сном</span></div>
+        <div class="info-row"><span class="info-key">Пробиотики (опц.)</span><span class="info-val">Lactobacillus утром</span></div>
+      </div>
+
+    </section>
+
+    <!-- ── ТАБ: ПРОГРЕСС ── -->
+    <section id="tab-tracker" class="tab-section">
+
+      <header class="page-header">
+        <h1 class="page-title">Трекер прогресса</h1>
+        <p class="page-sub">Еженедельный дневник · данные сохраняются локально</p>
+      </header>
+
+      <!-- Итоговые карточки трекера -->
+      <div class="tracker-summary" id="tracker-summary">
+        <div class="tscard">
+          <div class="tscard-label">Сброшено</div>
+          <div class="tscard-val" id="ts-lost">— кг</div>
+        </div>
+        <div class="tscard">
+          <div class="tscard-label">Осталось</div>
+          <div class="tscard-val" id="ts-left">15 кг</div>
+        </div>
+        <div class="tscard">
+          <div class="tscard-label">Недель пройдено</div>
+          <div class="tscard-val" id="ts-weeks">—</div>
+        </div>
+        <div class="tscard">
+          <div class="tscard-label">Дефицит всего</div>
+          <div class="tscard-val" id="ts-deficit">— ккал</div>
+        </div>
+      </div>
+
+      <!-- Прогресс-бар по весу -->
+      <div class="big-progress-wrap">
+        <div class="big-progress-header">
+          <span><i class="ti ti-scale"></i> Цель: −15 кг</span>
+          <span id="big-pct-label">0%</span>
+        </div>
+        <div class="big-progress-track">
+          <div class="big-progress-fill" id="big-progress-fill" style="width:0%"></div>
+        </div>
+        <div class="big-progress-footer">
+          <span id="big-start-weight">Старт: 95 кг</span>
+          <span id="big-current-weight">Сейчас: — кг</span>
+          <span>Цель: 80 кг</span>
+        </div>
+      </div>
+
+      <!-- Прогресс-бар по сожжённым калориям -->
+      <div class="big-progress-wrap">
+        <div class="big-progress-header">
+          <span><i class="ti ti-flame"></i> Цель: дефицит на 15 кг</span>
+          <span id="big-kcal-pct-label">0%</span>
+        </div>
+        <div class="big-progress-track">
+          <div class="big-progress-fill big-progress-fill--kcal" id="big-kcal-progress-fill" style="width:0%"></div>
+        </div>
+        <div class="big-progress-footer">
+          <span id="big-kcal-done">Накоплено: 0 ккал</span>
+          <span id="big-kcal-left">Цель: 0 ккал</span>
+        </div>
+      </div>
+
+      <!-- График -->
+      <h2 class="section-title">График веса</h2>
+      <div class="chart-wrap">
+        <canvas id="weightChart"></canvas>
+        <div class="chart-empty" id="chart-empty">
+          <i class="ti ti-chart-line" style="font-size:32px;color:var(--c-border)"></i>
+          <p>Добавьте первые записи чтобы увидеть график</p>
+        </div>
+      </div>
+
+      <!-- Форма добавления недели -->
+      <h2 class="section-title">Добавить неделю</h2>
+      <div class="entry-form" id="entry-form">
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label">Номер недели</label>
+            <input type="number" id="f-week" class="field-input" min="1" max="52" placeholder="25" />
+          </div>
+          <div class="field">
+            <label class="field-label">Вес, кг</label>
+            <input type="number" id="f-weight" class="field-input" step="0.1" min="70" max="110" placeholder="95.0" />
+          </div>
+          <div class="field">
+            <label class="field-label">Съедено, ккал</label>
+            <input type="number" id="f-kcal" class="field-input" placeholder="15750" />
+          </div>
+          <div class="field">
+            <label class="field-label">Тренировок</label>
+            <input type="number" id="f-workouts" class="field-input" min="0" max="7" placeholder="6" />
+          </div>
+          <div class="field">
+            <label class="field-label">Шагов всего</label>
+            <input type="number" id="f-steps" class="field-input" placeholder="105000" />
+          </div>
+        </div>
+        <button class="btn-primary" id="btn-save-entry">
+          <i class="ti ti-plus"></i> Сохранить неделю
+        </button>
+      </div>
+
+      <!-- Таблица недель -->
+      <h2 class="section-title" style="margin-top:1.5rem">
+        История недель
+        <button class="btn-ghost btn-sm" id="btn-export" title="Экспорт CSV">
+          <i class="ti ti-download"></i> CSV
+        </button>
+      </h2>
+      <p style="font-size:11px;color:var(--c-text-faint);margin:0 0 8px;display:flex;align-items:center;gap:4px"><i class="ti ti-arrow-left-right"></i> Таблица шире экрана — листайте пальцем влево</p>
+      <div class="weeks-table-wrap">
+        <table class="weeks-table" id="weeks-table">
+          <thead>
+            <tr>
+              <th>Нед</th>
+              <th>Вес</th>
+              <th>Ккал/нед</th>
+              <th>Тренировок</th>
+              <th>Шагов</th>
+              <th>Сожжено</th>
+              <th>Δ вес</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="weeks-tbody">
+            <tr class="empty-row" id="weeks-empty">
+              <td colspan="8">Записей пока нет</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===== СКРИПТЫ ===== -->
+  <!-- Chart.js для графика веса -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <!-- Данные (упражнения, еда) -->
+  <script src="data/training.js"></script>
+  <script src="data/nutrition.js"></script>
+  <!-- Логика приложения -->
+  <script src="js/ui.js"></script>
+  <script src="js/tracker.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
